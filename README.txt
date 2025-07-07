@@ -100,3 +100,8 @@ Welcome to the JavaScript Crash Course! This guide summarizes everything we’ve
 
 ## 📁 File Structure
 
+
+📦 javascript_crash_course
+┣ 📄 index.html # Landing page
+┣ 📄 main.js # All concepts and exercises
+┣ 📄 README.md # This file

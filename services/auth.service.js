@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
 export const signup = async (name, email, password) => {
@@ -19,17 +18,6 @@ export const login = async (email, password) => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Incorrect Username or password");
 
-  const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
-  });
-
-  return { token, user };
-};
-export const authenticate = (token) => {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded;
-  } catch (error) {
-    throw new Error("Invalid token");
-  }
+  const { password: _, ...safeUser } = user.toObject();
+  return safeUser; 
 };

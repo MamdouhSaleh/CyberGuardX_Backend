@@ -10,24 +10,25 @@ export const signup = async (req, res) => {
   }
 };
 
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const { token, user } = await loginService(email, password);
-    res.status(200).json({token});
+    const user = await loginService(email, password);
+
+    req.session.user = user; 
+    res.status(200).json({ message: "Login successful", user });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(401).json({ error: err.message });
   }
 };
-export const authenticate = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "No token provided" });
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    res.status(401).json({ error: "Invalid token" });
-  }
+
+export const logout = (req, res) => {
+  req.session.destroy(err => {
+    if (err) return res.status(500).json({ message: "Logout failed" });
+
+    res.clearCookie("connect.sid"); 
+    res.json({ message: "Logged out" });
+  });
 };

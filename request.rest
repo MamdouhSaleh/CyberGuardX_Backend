@@ -1,0 +1,20 @@
+# POSt http://localhost:3000/api/auth/signup
+# Content-Type: application/json
+
+# {
+#   "name": "Mamdouh Saleh",
+#   "email": "Mamdouhmoh.saleh@gmail.com",
+#   "password": "123456"
+# }
+
+# POST http://localhost:3000/api/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "Mamdouhmoh.saleh@gmail.com",
+#   "password": "123456"
+# }
+
+GET http://localhost:3000/api/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NzA2YTVhZTNiZDdkYjliZTExMDJiZSIsImVtYWlsIjoiTWFtZG91aG1vaC5zYWxlaEBnbWFpbC5jb20iLCJpYXQiOjE3NTIxOTgwNzEsImV4cCI6MTc1MjIwMTY3MX0.QPn-q8vOmN1taNJgP7esl-Gm4ACop1kQ2JjhgjAzvzw
+

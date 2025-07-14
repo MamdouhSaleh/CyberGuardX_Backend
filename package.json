@@ -22,6 +22,7 @@
     "content-type": "^1.0.5",
     "cookie": "^0.7.2",
     "cookie-signature": "^1.2.2",
+    "crypt": "^0.0.2",
     "debug": "^4.4.1",
     "depd": "^2.0.0",
     "dotenv": "^17.2.0",

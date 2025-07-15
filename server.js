@@ -7,14 +7,19 @@ import jwt from 'jsonwebtoken';
 
 import authRoutes from './routes/auth.route.js';
 import { User } from './models/user.model.js';
+import { Message } from './models/message.model.js';
 
 dotenv.config();
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
+
 app.use(express.json());
+app.use(express.static('public'));
 app.use('/api/auth', authRoutes);
+
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log('MongoDB connected');
@@ -23,23 +28,41 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
   });
 }).catch(err => console.error('DB Connection Error:', err));
 
-io.use(async (socket, next) => {
-  const token = socket.handshake.auth.token;
+const chatNamespace = io.of('/chatroom');
+
+chatNamespace.use(async (socket, next) => {
+  let token;
+
+  const authHeader = socket.handshake.headers['authorization'];
+  if (authHeader?.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  }
+
+  if (!token && socket.handshake.auth?.token) {
+    token = socket.handshake.auth.token;
+  }
+
+  if (!token) {
+    return next(new Error('Missing token'));
+  }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
-    if (!user || !user.isVerified) return next(new Error("Unauthorized"));
+
+    if (!user || !user.isVerified) {
+      return next(new Error('Unauthorized'));
+    }
+
     socket.user = user;
     next();
   } catch (err) {
-    next(new Error("Unauthorized"));
+    return next(new Error('Invalid token'));
   }
 });
 
-import { Message } from './models/message.model.js';
-
-io.on('connection', async (socket) => {
-  console.log(`${socket.user.name} connected`);
+chatNamespace.on('connection', async (socket) => {
+  console.log(`${socket.user.name} connected to /chatroom`);
 
   const recentMessages = await Message.find()
     .sort({ timestamp: 1 })
@@ -59,7 +82,7 @@ io.on('connection', async (socket) => {
       timestamp: new Date().getTime()
     });
 
-    io.emit('chat:message', {
+    chatNamespace.emit('chat:message', {
       user: socket.user.name,
       msg,
       timestamp: savedMsg.timestamp
@@ -67,6 +90,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log(`${socket.user.name} disconnected`);
+    console.log(`${socket.user.name} disconnected from /chatroom`);
   });
 });

@@ -83,8 +83,16 @@
 
     function connect() {
       const token = document.getElementById('token').value;
-      socket = io('http://localhost:3000', {
-        auth: { token }
+        if (!token) {
+            alert('Please enter a valid JWT token');
+            return;
+        }
+      socket = io('http://localhost:3000/chatroom', {
+        extraHeaders: {
+        Authorization: `Bearer ${token}`
+      },
+      auth : { token },
+      transports: ['websocket'] 
       });
 
       socket.on('connect', () => {

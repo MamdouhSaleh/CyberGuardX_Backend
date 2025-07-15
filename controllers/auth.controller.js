@@ -17,7 +17,7 @@ export const register = async (req, res) => {
       verificationToken,
     });
 
-    sendVerificationEmail(user.email, verificationToken);
+    await sendVerificationEmail(user.email, verificationToken);
     res.status(201).json({ message: 'Registration successful, check your email to verify your account.' });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -27,6 +27,7 @@ export const register = async (req, res) => {
 export const verifyEmail = async (req, res) => {
   try {
     const user = await User.findOne({ verificationToken: req.params.token });
+    console.log(req.params.token)
     if (!user) return res.status(400).json({ error: 'Invalid token' });
 
     user.isVerified = true;
@@ -40,9 +41,9 @@ export const verifyEmail = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ name });
     if (!user || !await bcrypt.compare(password, user.password)) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }

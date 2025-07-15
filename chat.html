@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Room</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    input {
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      width: 400px;
+    }
+
+    button {
+      background-color: #03dac6;
+      color: #000;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00bfa5;
+    }
+
+    #chat {
+      margin-top: 20px;
+      display: none;
+    }
+
+    #messages {
+      height: 300px;
+      overflow-y: auto;
+      background-color: #1e1e1e;
+      border: 1px solid #333;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    #msgInput {
+      width: 300px;
+    }
+
+    .msg {
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <h2>💬 Chat Room</h2>
+
+  <input id="token" placeholder="Paste your JWT token" />
+  <button onclick="connect()">Connect</button>
+
+  <div id="chat">
+    <div id="messages"></div>
+    <input id="msgInput" placeholder="Message..." />
+    <button onclick="sendMsg()">Send</button>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    let socket;
+
+    function connect() {
+      const token = document.getElementById('token').value;
+      socket = io('http://localhost:3000', {
+        auth: { token }
+      });
+
+      socket.on('connect', () => {
+        document.getElementById('chat').style.display = 'block';
+        console.log('Connected');
+      });
+
+      socket.on('chat:message', (data) => {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('msg');
+        const time = new Date(data.timestamp || Date.now()).toLocaleTimeString();
+        msgDiv.innerText = `[${time}] ${data.user}: ${data.msg}`;
+        document.getElementById('messages').appendChild(msgDiv);
+        scrollToBottom();
+      });
+
+      socket.on('chat:history', (messages) => {
+        messages.forEach(msg => {
+          const msgDiv = document.createElement('div');
+          msgDiv.classList.add('msg');
+          msgDiv.innerText = `[${new Date(msg.timestamp).toLocaleTimeString()}] ${msg.user}: ${msg.msg}`;
+          document.getElementById('messages').appendChild(msgDiv);
+        });
+        scrollToBottom();
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected');
+      });
+
+      socket.on('connect_error', (err) => {
+        alert('Connection failed: ' + err.message);
+      });
+    }
+
+    function sendMsg() {
+      const msg = document.getElementById('msgInput').value;
+      socket.emit('chat:message', msg);
+      document.getElementById('msgInput').value = '';
+    }
+
+    function scrollToBottom() {
+      const messagesDiv = document.getElementById('messages');
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  </script>
+</body>
+</html>

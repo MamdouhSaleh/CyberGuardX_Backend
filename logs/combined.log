@@ -1,1 +1,6 @@
-{"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-15T10:44:12.897Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-15T11:34:30.465Z"}
+{"level":"info","message":"GET /error from ::1","timestamp":"2025-07-15T11:34:32.203Z"}
+{"level":"error","message":"Simulated error for logging - GET /error from ::1","timestamp":"2025-07-15T11:34:32.205Z"}
+{"level":"info","message":"GET / from ::1","timestamp":"2025-07-15T11:34:49.119Z"}
+{"level":"info","message":"GET /error from ::1","timestamp":"2025-07-15T11:35:02.355Z"}
+{"level":"error","message":"Simulated error for logging - GET /error from ::1","timestamp":"2025-07-15T11:35:02.356Z"}

@@ -6,5 +6,6 @@ const router = express.Router();
 router.post('/', bookController.createBook);
 router.get('/', bookController.getBooks);
 router.get('/:id', bookController.getBook);
+router.get('/category/:categoryId', bookController.getBooksByCategory);
 
 export default router;

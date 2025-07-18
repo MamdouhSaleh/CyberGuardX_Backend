@@ -17,3 +17,7 @@ export async function getAllBooks() {
 export async function getBookById(id) {
   return Book.findById(id).populate('categories', 'name');
 }
+
+export async function getBooksByCategory(categoryId) {
+  return Book.find({ categories: categoryId }).populate('categories', 'name');
+}

@@ -21,3 +21,12 @@ export async function getBook(req, res) {
     }
 
 }
+
+export async function getBooksByCategory(req, res) {
+    const categoryId = req.params.categoryId;
+    const books = await bookService.getBooksByCategory(categoryId);
+    if (books.length === 0) {
+        return res.status(404).json({ message: 'No books found for this category' });
+    }
+    res.json(books);
+}

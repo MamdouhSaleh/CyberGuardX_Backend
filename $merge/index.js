@@ -14,15 +14,19 @@ const productSchema = new Schema({
 
 const Product = mongoose.model('Product', productSchema);
 
-await Product.deleteMany({});
-await Product.insertMany([
-    { name: 'Laptop', price: 1000, tags: ['electronics'], hasDiscount: true, discountRate: 0.2 },
-    { name: 'Phone', price: 500, tags: ['mobile'], hasDiscount: false },
-    { name: 'Book', price: 40, tags: ['education'], hasDiscount: true, discountRate: 0.1 },
-    { name: 'Desk', price: 200, tags: ['furniture'], hasDiscount: true, discountRate: 0.15 }
-]);
+if (await Product.countDocuments() > 0) {
+    console.log('Products already exist, skipping insertion.');
+} else {
+    await Product.insertMany([
+        { name: 'Laptop', price: 1000, tags: ['electronics'], hasDiscount: true, discountRate: 0.2 },
+        { name: 'Phone', price: 500, tags: ['mobile'], hasDiscount: false },
+        { name: 'Book', price: 40, tags: ['education'], hasDiscount: true, discountRate: 0.1 },
+        { name: 'Desk', price: 200, tags: ['furniture'], hasDiscount: true, discountRate: 0.15 }
+    ]);
+}
 
 const DiscountedProduct = mongoose.connection.collection('discounted_products');
+
 
 await Product.aggregate([
     {
@@ -42,18 +46,19 @@ await Product.aggregate([
     },
     {
         $project: {
-            _id: 0,
+            _id: 1,
             name: 1,
             price: 1,
             discountRate: {
                 $concat: [
-                    { $toString: { $multiply: [100, '$discountRate'] } },'%']
+                    { $toString: { $multiply: [100, '$discountRate'] } }, '%']
             },
             discountPrice: 1,
             uppercaseName: 1,
             firstTag: 1
         }
     },
+    
     {
         $merge: {
             into: 'discounted_products',

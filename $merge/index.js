@@ -23,7 +23,6 @@ await Product.insertMany([
 ]);
 
 const DiscountedProduct = mongoose.connection.collection('discounted_products');
-await DiscountedProduct.deleteMany({});
 
 await Product.aggregate([
     {

@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "name": "cyberguardx_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "mongoose": "^7.8.7"
+  }
+}

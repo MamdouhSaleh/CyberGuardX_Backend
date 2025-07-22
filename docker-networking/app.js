@@ -16,7 +16,7 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-mongoose.connect('mongodb://mongo:27017/myfilesdb')
+mongoose.connect('mongodb://mongo:27017/testdb')
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 

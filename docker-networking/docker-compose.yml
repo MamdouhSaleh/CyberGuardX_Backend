@@ -1,0 +1,33 @@
+services:
+  backend:
+    build: .
+    container_name: node-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - ./docker-uploads:/app/docker-uploads
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6.0.25
+    container_name: mongodb
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge

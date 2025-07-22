@@ -20,7 +20,7 @@ CMD ["npm", "start"]
 
 # docker run -p 3000:3000 \
 #   -v $(pwd):/app \                              
-#   -v $(pwd)/docker-uploads:/app/uploads \               
+# -v "$(pwd)/docker-uploads":/app/docker-uploads
 #   -w /app \
 #   node:22.8.0 npm install && npm run dev
 
@@ -28,7 +28,7 @@ CMD ["npm", "start"]
 
 # docker run -p 3000:3000 \
 #   -v "$PWD":/app \
-#   -v "$PWD/docker-uploads":/app/uploads \
+#   -v "$PWD/docker-uploads":/app/docker-uploads \
 #   -w /app \
 #   node:22.8.0 sh -c "npm install && npm run dev"
 

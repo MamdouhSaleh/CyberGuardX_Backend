@@ -1,0 +1,13 @@
+services:
+  backend:
+    build: .                                             # Uses Dockerfile in the current directory
+    ports:
+      - "3000:3000"                                      # Maps localhost:3000 → container:3000
+    volumes:
+      - .:/app                                           # Mount source code into container
+      - ./docker-uploads:/app/docker-uploads             # Persist uploaded files
+    restart: unless-stopped
+
+    ## docker-compose up to start the service
+    ## docker-compose down to stop the service and remove containers
+    ## docker-compose logs to view logs

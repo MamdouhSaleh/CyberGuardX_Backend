@@ -45,7 +45,7 @@ try {
 }
 console.timeEnd('Insert Many (No Index)');
 
-let duplicate = await User.find({ email: usersNoIndex[9999].email }).count() > 1 ? 'Yes' : 'No';
+let duplicate = await User.countDocuments({ email: usersNoIndex[9999].email }) > 1 ? 'Yes' : 'No';
 
 console.log('Duplicates:', duplicate);
 console.log('Total Users:', await User.countDocuments());
@@ -66,7 +66,7 @@ try {
 }
 console.timeEnd('Insert Many (With Unique Index)');
 
-duplicate = await User.find({ email: usersNoIndex[9999].email }).count() > 1 ? 'Yes' : 'No';
+duplicate = await User.countDocuments({ email: usersNoIndex[9999].email }) > 1 ? 'Yes' : 'No';
 
 
 console.log('Duplicates:', duplicate);

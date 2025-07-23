@@ -20,6 +20,9 @@ mongoose.connect('mongodb://mongo:27017/testdb')
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// const mongoUri = 'mongodb://host.docker.internal:27017/mydb';
+// mongoose.connect(mongoUri);
+
 const FileSchema = new mongoose.Schema({
   filename: String,
   uploadedAt: { type: Date, default: Date.now }

@@ -1,0 +1,30 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "${PORT}:${PORT}"              
+    environment:
+      - PORT=${PORT}
+      - UPLOAD_DIR=${UPLOAD_DIR}
+    volumes:
+      - .:/app
+      - ./docker-uploads:/app/${UPLOAD_DIR}
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6.0.25
+    container_name: mongodb
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27018:27017"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

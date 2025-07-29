@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "name": "oauth2-demo",
+  "version": "1.0.0",
+  "description": "Welcome to the official GitHub repository for the **CyberGuardX Backend Bootcamp**!   This project serves as a hands-on guide to mastering backend engineering using **Node.js**, **Express**, and **MongoDB** with real-world patterns, best practices, and modern tools.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.16.5",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}

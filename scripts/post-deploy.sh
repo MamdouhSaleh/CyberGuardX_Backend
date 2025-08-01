@@ -1,15 +1,19 @@
 #!/bin/bash
 set -e
 
-# Install Node.js and npm system-wide
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Go to your project directory
 cd /home/ubuntu/CyberGuardX_Backend
 
-# Install deps & run app
+export PATH=$PATH:/usr/bin:/usr/local/bin
+
+echo "Node path: $(which node)"
+echo "NPM path: $(which npm)"
+echo "Node version: $(node -v)"
+echo "NPM version: $(npm -v)"
+
+echo "Installing dependencies..."
 npm install
-npm start
 
+echo "Starting app in background..."
+nohup npm start > app.log 2>&1 &
 
+echo "Deployment script completed successfully."

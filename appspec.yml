@@ -1,0 +1,10 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/CyberGuardX_Backend
+hooks:
+  AfterInstall:
+    - location: scripts/post-deploy.sh
+      timeout: 300
+      runas: ubuntu

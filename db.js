@@ -1,4 +1,7 @@
 import pkg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const { Pool } = pkg;
 
@@ -14,3 +17,11 @@ const pool = new Pool({
 });
 
 export default pool;
+
+// CREATE DATABASE test;
+
+// CREATE TABLE testtable (
+//   id SERIAL PRIMARY KEY,
+//   name VARCHAR(100),
+//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+// );

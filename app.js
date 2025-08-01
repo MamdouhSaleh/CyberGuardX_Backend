@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+
 app.get('/ids', async (req, res) => {
   try {
     const result = await pool.query('SELECT id FROM testtable');

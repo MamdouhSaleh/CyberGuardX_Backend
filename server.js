@@ -1,6 +1,8 @@
-import app from "./app.js";
+import mongoose from 'mongoose';
+import app from './app.js';
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+mongoose.connect('mongodb://localhost:27017/in-memory-test')
+  .then(() => {
+    app.listen(3000, () => console.log('Server running'));
+  })
+  .catch(err => console.error(err));

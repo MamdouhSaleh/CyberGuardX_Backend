@@ -184,6 +184,7 @@
     "minipass": "^7.1.2",
     "mongodb": "^6.17.0",
     "mongodb-connection-string-url": "^3.0.2",
+    "mongodb-memory-server": "^10.2.0",
     "mongoose": "^8.16.5",
     "mpath": "^0.9.0",
     "mquery": "^5.0.0",

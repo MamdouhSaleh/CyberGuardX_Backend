@@ -1,58 +1,80 @@
-import request from "supertest";
-import app from "../app.js";
-import { users } from "../utils/users.js";
+import request from 'supertest';
+import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import app from '../app.js';
+import User from '../models/user.model.js';
 
-beforeEach(() => {
-  users.length = 0; 
+let mongoServer;
+
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
 });
 
-describe("Auth API", () => {
-  test("should register a user", async () => {
+afterEach(async () => {
+  await User.deleteMany();
+});
+
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
+
+describe('Auth API', () => {
+
+  test("debug test", async () => {
+    await User.create({ email: "x@test.com", password: "123" });
+    const users = await User.find();
+    expect(users.length).toBe(1);
+    console.log(users);
+  });
+  
+  test('should register a user', async () => {
     const res = await request(app)
-      .post("/api/auth/register")
-      .send({ email: "test@example.com", password: "123456" });
+      .post('/api/auth/register')
+      .send({ email: 'test@example.com', password: '123456' });
 
     expect(res.statusCode).toBe(201);
-    expect(res.body.message).toBe("User registered");
+    expect(res.body.message).toBe('User registered');
   });
 
-  test("should not register with duplicate email", async () => {
+  test('should not register duplicate email', async () => {
     await request(app)
-      .post("/api/auth/register")
-      .send({ email: "test@example.com", password: "123456" });
+      .post('/api/auth/register')
+      .send({ email: 'test@example.com', password: '123456' });
 
     const res = await request(app)
-      .post("/api/auth/register")
-      .send({ email: "test@example.com", password: "123456" });
+      .post('/api/auth/register')
+      .send({ email: 'test@example.com', password: '123456' });
 
     expect(res.statusCode).toBe(400);
-    expect(res.body.message).toBe("Email already registered");
+    expect(res.body.message).toBe('Email already registered');
   });
 
-  test("should login with correct credentials", async () => {
+  test('should login with correct credentials', async () => {
     await request(app)
-      .post("/api/auth/register")
-      .send({ email: "test@example.com", password: "123456" });
+      .post('/api/auth/register')
+      .send({ email: 'test@example.com', password: '123456' });
 
     const res = await request(app)
-      .post("/api/auth/login")
-      .send({ email: "test@example.com", password: "123456" });
+      .post('/api/auth/login')
+      .send({ email: 'test@example.com', password: '123456' });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty("token");
+    expect(res.body.token).toBeDefined();
   });
 
-  test("should reject login with wrong password", async () => {
+  test('should reject login with wrong password', async () => {
     await request(app)
-      .post("/api/auth/register")
-      .send({ email: "test@example.com", password: "123456" });
+      .post('/api/auth/register')
+      .send({ email: 'test@example.com', password: '123456' });
 
     const res = await request(app)
-      .post("/api/auth/login")
-      .send({ email: "test@example.com", password: "wrong" });
+      .post('/api/auth/login')
+      .send({ email: 'test@example.com', password: 'wrong' });
 
     expect(res.statusCode).toBe(401);
-    expect(res.body.message).toBe("Invalid credentials");
+    expect(res.body.message).toBe('Invalid credentials');
   });
 });
-

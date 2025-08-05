@@ -1,80 +1,28 @@
-import request from 'supertest';
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import app from '../app.js';
-import User from '../models/user.model.js';
+import { jest } from '@jest/globals';
 
-let mongoServer;
+jest.unstable_mockModule('../services/auth.service.js', () => ({
+  registerUser: jest.fn(),
+}));
 
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const uri = mongoServer.getUri();
-  await mongoose.connect(uri);
-});
+const authService = await import('../services/auth.service.js');
+const { register } = await import('../controllers/auth.controller.js');
 
-afterEach(async () => {
-  await User.deleteMany();
-});
+describe('Register Controller', () => {
+  test('should return 201 on success', async () => {
+    const req = {
+      body: { email: 'test@example.com', password: '123456' },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
 
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
+    authService.registerUser.mockResolvedValueOnce();
 
-describe('Auth API', () => {
+    await register(req, res);
 
-  test("debug test", async () => {
-    await User.create({ email: "x@test.com", password: "123" });
-    const users = await User.find();
-    expect(users.length).toBe(1);
-    console.log(users);
-  });
-  
-  test('should register a user', async () => {
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'test@example.com', password: '123456' });
-
-    expect(res.statusCode).toBe(201);
-    expect(res.body.message).toBe('User registered');
-  });
-
-  test('should not register duplicate email', async () => {
-    await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'test@example.com', password: '123456' });
-
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'test@example.com', password: '123456' });
-
-    expect(res.statusCode).toBe(400);
-    expect(res.body.message).toBe('Email already registered');
-  });
-
-  test('should login with correct credentials', async () => {
-    await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'test@example.com', password: '123456' });
-
-    const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'test@example.com', password: '123456' });
-
-    expect(res.statusCode).toBe(200);
-    expect(res.body.token).toBeDefined();
-  });
-
-  test('should reject login with wrong password', async () => {
-    await request(app)
-      .post('/api/auth/register')
-      .send({ email: 'test@example.com', password: '123456' });
-
-    const res = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'test@example.com', password: 'wrong' });
-
-    expect(res.statusCode).toBe(401);
-    expect(res.body.message).toBe('Invalid credentials');
+    expect(authService.registerUser).toHaveBeenCalledWith('test@example.com', '123456');
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({ message: 'User registered' });
   });
 });

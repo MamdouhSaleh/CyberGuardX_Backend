@@ -1,5 +1,6 @@
-{ "type": "module",
-  "name": "jest",
+{
+  "type": "module",
+  "name": "supertest",
   "version": "1.0.0",
   "description": "Welcome to the official GitHub repository for the **CyberGuardX Backend Bootcamp**!   This project serves as a hands-on guide to mastering backend engineering using **Node.js**, **Express**, and **MongoDB** with real-world patterns, best practices, and modern tools.",
   "main": "index.js",
@@ -17,6 +18,8 @@
     "babel-preset-jest": "^30.0.1",
     "balanced-match": "^1.0.2",
     "base64url": "^3.0.1",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
     "bowser": "^2.11.0",
     "brace-expansion": "^2.0.2",
@@ -263,6 +266,7 @@
     "strip-final-newline": "^2.0.0",
     "strip-json-comments": "^3.1.1",
     "strnum": "^2.1.1",
+    "supertest": "^7.1.4",
     "supports-color": "^7.2.0",
     "synckit": "^0.11.11",
     "test-exclude": "^6.0.0",
@@ -298,9 +302,8 @@
     "yargs-parser": "^21.1.1",
     "yocto-queue": "^0.1.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node app.js"
   },
   "author": "",

@@ -1,19 +1,11 @@
 #!/bin/bash
-set -e
 
-cd /home/ubuntu/CyberGuardX_Backend
+export NVM_DIR="/home/ubuntu/.nvm"
+source "$NVM_DIR/nvm.sh"
 
-export PATH=$PATH:/usr/bin:/usr/local/bin
-
-echo "Node path: $(which node)"
-echo "NPM path: $(which npm)"
 echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
 
-echo "Installing dependencies..."
+cd /home/ubuntu/CyberGuardX_Backend
 npm install
-
-echo "Starting app in background..."
-nohup npm start > app.log 2>&1 &
-
-echo "Deployment script completed successfully."
+pm2 restart all || node index.js &
